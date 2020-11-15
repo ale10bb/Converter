@@ -1,0 +1,8 @@
+__pycache__
+/.vscode
+/build
+*.spec
+/dist
+/Converter.log
+/AdviceList.txt
+res/XT09/RD-XT09测评方案审核意见单.docx
