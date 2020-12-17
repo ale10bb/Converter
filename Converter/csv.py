@@ -18,7 +18,7 @@ def read_Nessus(src_file_path:str) -> list:
     '''
     _LOGGER.info('[Converter/csv/read_Nessus] Reading "{}".'.format(src_file_path))
     ret = []
-    with open(src_file_path, encoding='utf-8') as src_file:
+    with open(src_file_path, encoding='utf-8-sig') as src_file:
         rows = csv.DictReader(src_file, quoting=csv.QUOTE_ALL)
         for row in rows:
             # 对于没有Plugin ID列，或Plugin ID不为数字的异常情况，直接跳过该行

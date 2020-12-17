@@ -30,7 +30,7 @@ def main():
     for target_path in target_paths:
         try:
             rows = Converter.csv.read_Nessus(target_path)
-            with open(os.path.splitext(target_path)[0] + '_converted.csv', 'w', encoding='utf-8') as dst_file:
+            with open(os.path.splitext(target_path)[0] + '_converted.csv', 'w', encoding='utf-8-sig') as dst_file:
                 writer = csv.DictWriter(dst_file, fieldnames=list(rows[0].keys()), quoting=csv.QUOTE_ALL)
                 writer.writeheader()
                 writer.writerows(rows)
