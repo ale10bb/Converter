@@ -2,3 +2,4 @@ python-docx
 walkdir
 pywin32
 PyPDF2
+requests
