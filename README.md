@@ -13,4 +13,4 @@
 - [x] (AppScan) AppScan XML -> 测评能手标准XML
 - [x] (XT09) 一键生成方案审核意见单XT09
 - [x] (Merge) Word -> PDF 一键转换及合并
-- [ ] () Nessus CSV转换及自动翻译
+- [x] (Nessus) Nessus CSV自动翻译
