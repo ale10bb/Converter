@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 import os
 import argparse
-from walkdir import filtered_walk, file_paths
 from time import sleep
 
 from Converter.macros import _LOGGER

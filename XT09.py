@@ -3,7 +3,6 @@ import os
 import sys
 import shutil
 import argparse
-from walkdir import filtered_walk, file_paths
 from time import sleep
 
 from Converter.macros import _LOGGER, _RESOURCE_PATH
