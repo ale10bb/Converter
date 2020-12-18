@@ -29,7 +29,8 @@ def main():
     count = 0
     for target_path in target_paths:
         try:
-            rows = Converter.csv.read_Nessus(target_path)
+            # 本地数据库文件必须位于可执行文件的同目录下
+            rows = Converter.csv.read_Nessus(target_path, os.path.join(os.path.dirname(sys.argv[0]), 'vulns.sqlite3'))
             with open(os.path.splitext(target_path)[0] + '_converted.csv', 'w', encoding='utf-8-sig') as dst_file:
                 writer = csv.DictWriter(dst_file, fieldnames=list(rows[0].keys()), quoting=csv.QUOTE_ALL)
                 writer.writeheader()
