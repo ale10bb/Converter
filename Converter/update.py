@@ -25,7 +25,12 @@ def Nessus_db(db_file_path:str):
         if local_info_pack['built'] >= remote_info_pack['built']:
             _LOGGER.info('[Nessus] Up to date.')
             return
-        _LOGGER.info('[Nessus] Downloading remote DB: {} ({} vulns).'.format(datetime.datetime.fromtimestamp(remote_info_pack['built']).strftime('%Y-%m-%d'), remote_info_pack['count']))
+        _LOGGER.info(
+            '[Nessus] Downloading remote DB: {} ({} smore vulns).'.format(
+                datetime.datetime.fromtimestamp(remote_info_pack['built']).strftime('%Y-%m-%d'), 
+                remote_info_pack['count'] - local_info_pack['count']
+            )
+        )
         with open(db_file_path, 'wb') as db_file:
             db_file.write(requests.get('https://nt.chenqlz.top/static/vulns.sqlite3').content)
         _LOGGER.info('[Nessus] Update complete.')
