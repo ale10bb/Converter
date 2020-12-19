@@ -36,6 +36,7 @@ def read_Nessus(src_file_path:str, db_file_path:str) -> list:
             finally:
                 count += 1
             ret.append(row)
+    _LOGGER.info('[Converter/csv/read_Nessus] lines = {}.'.format(count))
     return ret
 
 def get_zhcn_pack(plugin_id:int, db_file_path:str) -> dict:
@@ -57,7 +58,6 @@ def get_zhcn_pack(plugin_id:int, db_file_path:str) -> dict:
     # 首先从本地sqlite缓存读取
     row = conn.execute("SELECT * FROM zhcn WHERE `pluginid` = ?", (plugin_id,)).fetchone()
     if row:
-        _LOGGER.debug('[Converter/csv/get_zhcn_pack] Local hit: {}.'.format(plugin_id))
         ret['reviewed'] = row[1]
         ret['script_name'] = row[2]
         ret['synopsis'] = row[3]
@@ -65,17 +65,16 @@ def get_zhcn_pack(plugin_id:int, db_file_path:str) -> dict:
         ret['solution'] = row[5]
     else:
         # 本地缓存未命中时，向NTS请求缓存
+        _LOGGER.debug('[Converter/csv/get_zhcn_pack] Local miss. Quering NTS: {}.'.format(plugin_id))
         remote_search = requests.get('https://nt.chenqlz.top/api/search?id={}'.format(plugin_id)).json()
         if remote_search['result'] == 0:
             # NTS缓存命中时，将结果存放至本地缓存
-            _LOGGER.debug('[Converter/csv/get_zhcn_pack] Remote hit: {}.'.format(plugin_id))
             ret = remote_search['data']
             conn.execute("INSERT INTO zhcn VALUES (?, ?, ?, ?, ?, ?)", (plugin_id, ret['reviewed'], ret['script_name'], ret['synopsis'], ret['description'], ret['solution']))
             conn.execute("UPDATE config SET value = value + 1 WHERE `key` = 'count'")
         elif remote_search['result'] == 2:
             # NTS缓存未命中时，向NTS发起翻译请求
-            _LOGGER.debug('[Converter/csv/get_zhcn_pack] Cache miss: {}.'.format(plugin_id))
-            _LOGGER.info('[Converter/csv/get_zhcn_pack] Waiting for server translation: {}.'.format(plugin_id))
+            _LOGGER.info('[Converter/csv/get_zhcn_pack] Remote miss. Waiting for server translation: {}.'.format(plugin_id))
             remote_update = requests.get('https://nt.chenqlz.top/api/update?id={}'.format(plugin_id)).json()
             if remote_update['result'] == 0:
                 # NTS翻译成功时，请求翻译后的数据，并存放至本地缓存
