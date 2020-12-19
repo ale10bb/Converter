@@ -20,6 +20,7 @@ def read_Nessus(src_file_path:str, db_file_path:str) -> list:
     # 微软默认使用UTF-8-BOM的格式读写CSV
     with open(src_file_path, encoding='utf-8-sig') as src_file:
         rows = csv.DictReader(src_file, quoting=csv.QUOTE_ALL)
+        count = 1
         for row in rows:
             try:
                 # 对于没有Plugin ID列，或Plugin ID不为数字的异常情况，直接跳过该行
@@ -31,7 +32,9 @@ def read_Nessus(src_file_path:str, db_file_path:str) -> list:
                 row['Description'] = zhcn_pack['description']
                 row['Solution'] = zhcn_pack['solution']
             except Exception as err:
-                _LOGGER.warning('[Converter/csv/read_Nessus] Skipping {} due to "{}".'.format(plugin_id, err))
+                _LOGGER.warning('[Converter/csv/read_Nessus] Skipping line {} due to "{}".'.format(count, err))
+            finally:
+                count += 1
             ret.append(row)
     return ret
 
