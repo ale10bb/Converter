@@ -26,6 +26,7 @@ def file(path:str, exts:list) -> list:
         return [abs_path]
     if os.path.isdir(abs_path):
         return filter(None, list(file_paths(filtered_walk(abs_path, included_files=['*' + e for e in exts]))))
+    return []
 
 
 def XT09_advices(customized_advices:list=[]) -> str:
