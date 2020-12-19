@@ -46,7 +46,7 @@ def get_zhcn_pack(plugin_id:int, db_file_path:str) -> dict:
         db_file_path(str): 本地数据库文件的路径
 
     Returns:
-        dict: {'pluginid': xxx, 'script_name': xxx, 'synopsis': xxx, 'description': xxx, 'solution': xxx}
+        dict: {'pluginid': xxx, 'reviewed': xxx, 'script_name': xxx, 'synopsis': xxx, 'description': xxx, 'solution': xxx}
 
     Raises:
         ValueError: 如果服务器请求失败
@@ -58,10 +58,11 @@ def get_zhcn_pack(plugin_id:int, db_file_path:str) -> dict:
     row = conn.execute("SELECT * FROM zhcn WHERE `pluginid` = ?", (plugin_id,)).fetchone()
     if row:
         _LOGGER.debug('[Converter/csv/get_zhcn_pack] Local hit: {}.'.format(plugin_id))
-        ret['script_name'] = row[1]
-        ret['synopsis'] = row[2]
-        ret['description'] = row[3]
-        ret['solution'] = row[4]
+        ret['reviewed'] = row[1]
+        ret['script_name'] = row[2]
+        ret['synopsis'] = row[3]
+        ret['description'] = row[4]
+        ret['solution'] = row[5]
     else:
         # 本地缓存未命中时，向NTS请求缓存
         remote_search = requests.get('https://nt.chenqlz.top/api/search?id={}'.format(plugin_id)).json()
@@ -69,7 +70,7 @@ def get_zhcn_pack(plugin_id:int, db_file_path:str) -> dict:
             # NTS缓存命中时，将结果存放至本地缓存
             _LOGGER.debug('[Converter/csv/get_zhcn_pack] Remote hit: {}.'.format(plugin_id))
             ret = remote_search['data']
-            conn.execute("INSERT INTO zhcn VALUES (?, ?, ?, ?, ?)", (plugin_id, ret['script_name'], ret['synopsis'], ret['description'], ret['solution']))
+            conn.execute("INSERT INTO zhcn VALUES (?, ?, ?, ?, ?, ?)", (plugin_id, ret['reviewed'], ret['script_name'], ret['synopsis'], ret['description'], ret['solution']))
             conn.execute("UPDATE config SET value = value + 1 WHERE `key` = 'count'")
         elif remote_search['result'] == 2:
             # NTS缓存未命中时，向NTS发起翻译请求
@@ -80,7 +81,7 @@ def get_zhcn_pack(plugin_id:int, db_file_path:str) -> dict:
                 # NTS翻译成功时，请求翻译后的数据，并存放至本地缓存
                 remote_search = requests.get('https://nt.chenqlz.top/api/search?id={}'.format(plugin_id)).json()
                 ret = remote_search['data']
-                conn.execute("INSERT INTO zhcn VALUES (?, ?, ?, ?, ?)", (plugin_id, ret['script_name'], ret['synopsis'], ret['description'], ret['solution']))
+                conn.execute("INSERT INTO zhcn VALUES (?, ?, ?, ?, ?, ?)", (plugin_id, ret['reviewed'], ret['script_name'], ret['synopsis'], ret['description'], ret['solution']))
                 conn.execute("UPDATE config SET value = value + 1 WHERE `key` = 'count'")
             else:
                 raise ValueError('[NTS] Server fault.')
