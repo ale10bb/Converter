@@ -5,13 +5,14 @@
 ## 使用方式
 
 ``` 
-usage: Nessus [-h] path [path ...]
+usage: Nessus [-h] [-u] path [path ...]
 
 positional arguments:
-  path        file path or dir path
+  path          file path or dir path
 
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help    show this help message and exit
+  -u, --update  update local DB and exit
   
 **无输入参数时进入更新模式**
 ```
