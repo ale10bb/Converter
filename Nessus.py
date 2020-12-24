@@ -5,12 +5,11 @@ import argparse
 import datetime
 from time import sleep
 import csv
-import requests
 
 from Converter.macros import _LOGGER
 import Converter.walk
 import Converter.csv
-import Converter.update
+import Converter.sqlite
 
 class _UpdateAction(argparse.Action):
 
@@ -30,7 +29,7 @@ class _UpdateAction(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         db_file_path = self.db_file_path
-        Converter.update.Nessus_db(db_file_path)
+        Converter.sqlite.update_Nessus(db_file_path)
         parser.exit()
 
 def main():
@@ -50,6 +49,12 @@ def main():
     args = parser.parse_args()
 
     _LOGGER.info('[Nessus] Started.')
+    # 检测本地数据库是否有效
+    if not Converter.sqlite.isvalid_Nessus(db_file_path):
+        _LOGGER.warning('[Nessus] Invalid local DB. Force updating...')
+        if Converter.sqlite.update_Nessus(db_file_path):
+            _LOGGER.error('[Nessus] No valid local DB.')
+            return
     # 过滤csv并去重
     _LOGGER.debug('[Nessus] arg_paths = "{}".'.format(args.path))
     target_paths = set()
