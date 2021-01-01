@@ -14,3 +14,9 @@
 - [x] (XT09) 一键生成方案审核意见单XT09
 - [x] (Merge) Word -> PDF 一键转换及合并
 - [x] (Nessus) Nessus CSV自动翻译
+
+## 下载地址
+
+``https://static.chenqlz.top/converter/{xxx}.exe``
+
+- 注：文件名区分大小写，``{xxx}``和上方括号内的程序名一致。
