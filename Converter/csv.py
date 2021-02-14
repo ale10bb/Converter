@@ -37,3 +37,21 @@ def read_Nessus(src_file_path:str, db_file_path:str) -> list:
             ret.append(row)
     _LOGGER.info('[Converter/csv/read_Nessus] lines = {}.'.format(count))
     return ret
+
+def write(rows:list, dst_file_path:str) -> int:
+    ''' 将{rows}写入{dst_file_path}
+
+    Args:
+        rows: 每个列表元素中需包含dict结构的csv行，写入时以第一个元素的key作为标题行
+        dst_file_path(str): 写入文件的路径
+
+    Returns:
+        0: 操作完成
+    '''
+
+    with open(dst_file_path, 'w', encoding='utf-8-sig') as dst_file:
+        writer = csv.DictWriter(dst_file, fieldnames=list(rows[0].keys()), quoting=csv.QUOTE_ALL)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    return 0
