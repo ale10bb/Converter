@@ -1,20 +1,17 @@
 # Nessus CSV自动翻译
 
-使用 Google Cloud Translation 将Nessus导出CSV的部分英文描述字段（``Name``、``Synopsis``、``Description``、``Solution``）翻译成中文。翻译时仅采用``Plugin ID``匹配，并修改原始CSV的对应字段（不存在时则新建）。
+使用 Google Cloud Translation 或其他可以白嫖的翻译服务，将Nessus导出CSV的部分英文描述字段（``Name``、``Synopsis``、``Description``、``Solution``）翻译成中文。翻译时仅采用``Plugin ID``匹配，并修改原始CSV的对应字段（不存在时则新建）。
 
 ## 使用方式
 
 ``` 
-usage: Nessus [-h] [-u] path [path ...]
+usage: Nessus [-h] path [path ...]
 
 positional arguments:
   path          file path or dir path
 
 optional arguments:
   -h, --help    show this help message and exit
-  -u, --update  update local DB and exit
-  
-**无输入参数时进入更新模式**
 ```
 
 - 可以打开一个或多个csv文件。如果使用exe，则可以直接把文件拖到exe上打开。
@@ -25,6 +22,4 @@ optional arguments:
 
 ## 服务端
 
-目前所有翻译请求由NTS-API转发，并暂存在NTS数据库中。NTS数据库每天生成sqlite格式的本地数据库，可在[chenqlz.top](https://nt.chenqlz.top/)下载。
-
-目前不考虑爬取[NessusPlugins](https://www.tenable.com/plugins)上的数据（虽然很好爬）。
+目前所有翻译请求由NTS-API转发，并暂存在NTS数据库中。可在Github的[ale10bb/NTS](https://github.com/ale10bb/NTS/raw/master/database/nessus-zhcn.gz)仓库下载完整sqlite数据库。
